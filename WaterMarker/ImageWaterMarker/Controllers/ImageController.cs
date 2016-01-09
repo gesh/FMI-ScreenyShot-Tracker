@@ -88,8 +88,6 @@ namespace ImageWaterMarker.Controllers
 
             graphics.DrawPath(p, gp);
             graphics.FillPath(sbrush, gp);
-            //graphics.DrawString(watermarkText, font, sbrush, pt);
-            //graphics.Dispose();
 
             return (byte[])converter.ConvertTo(img, typeof(byte[]));
         }
