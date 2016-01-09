@@ -19,22 +19,18 @@ namespace ImageWaterMarker.Controllers
         {
             try
             {
-                var imageWithWatermark = AddWatermark(new MemoryStream(image.ImageData), DateTime.Now.ToString());
+                var dateText = DateTime.Now.ToString("dd-MMM-yy HH:mm:ss");
+                var imageStream = new MemoryStream(image.ImageData);
+                var imageWithWatermark = AddWatermark(imageStream, dateText);
 
                 var imageResult = new ImageResult
                 {
                     ImageData = imageWithWatermark,
                     IsSuccess = true,
-                    ImageName = DateTime.Now.ToString()
+                    ImageName = dateText
                 };
 
-                return Request.CreateResponse(HttpStatusCode.OK, imageResult);
-
-                //HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-                //result.Content = new ByteArrayContent(imageWithWatermark);
-                //result.Content.Headers.ContentType = new MediaTypeHeaderValue("attachment");
-
-                //return result;
+                return Request.CreateResponse(HttpStatusCode.OK, imageResult);                
             }
             catch (Exception)
             {
@@ -47,13 +43,15 @@ namespace ImageWaterMarker.Controllers
             ImageConverter converter = new ImageConverter();
 
             Image img = Image.FromStream(ms);
-            Font font = new Font("Verdana", 50, FontStyle.Bold, GraphicsUnit.Pixel);
+            Font font = new Font("Verdana", 30, FontStyle.Bold, GraphicsUnit.Pixel);
 
             //Adds a transparent watermark with an 100 alpha value.
-            Color color = Color.FromArgb(255, 255, 255, 100);
+            Color color = Color.FromArgb(100, 0, 0, 0);
 
             //The position where to draw the watermark on the image
-            Point pt = new Point(10, 30);
+            int x = 20; 
+            int y = img.Height > 100 ? img.Height - 100 : 0;
+            Point pt = new Point(x, y);
 
             SolidBrush sbrush = new SolidBrush(color);
 
@@ -71,7 +69,7 @@ namespace ImageWaterMarker.Controllers
                 gr.DrawImage(img1, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel);
                 img1.Dispose();
             }
-
+            
             gr.DrawString(watermarkText, font, sbrush, pt);
             gr.Dispose();
 
