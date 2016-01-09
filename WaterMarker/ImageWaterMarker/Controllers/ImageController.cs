@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -45,8 +46,13 @@ namespace ImageWaterMarker.Controllers
         {
             ImageConverter converter = new ImageConverter();
 
+            //this will center align our text at the bottom of the image
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+            sf.LineAlignment = StringAlignment.Center;
+
             Image img = Image.FromStream(ms);
-            Font font = new Font("Verdana", 30, FontStyle.Bold, GraphicsUnit.Pixel);
+            Font font = new Font("Verdana", 32, FontStyle.Bold, GraphicsUnit.Pixel);
 
             //Adds a transparent watermark with an 100 alpha value.
             Color color = Color.FromArgb(100, 0, 0, 0);
@@ -55,6 +61,9 @@ namespace ImageWaterMarker.Controllers
             int x = WidthPadding; 
             int y = img.Height > HeightPadding ? (img.Height - HeightPadding) : 0;
             Point pt = new Point(x, y);
+
+            Pen p = new Pen(Color.FromArgb(100, 255,255,255));
+            p.LineJoin = LineJoin.Round; //prevent "spikes" at the path
 
             SolidBrush sbrush = new SolidBrush(color);
 
@@ -72,9 +81,15 @@ namespace ImageWaterMarker.Controllers
                 graphics.DrawImage(tempImage, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel);
                 tempImage.Dispose();
             }
-            
-            graphics.DrawString(watermarkText, font, sbrush, pt);
-            graphics.Dispose();
+
+            Rectangle r = new Rectangle(0, 0, img.Width, img.Height);
+            GraphicsPath gp = new GraphicsPath();
+            gp.AddString(watermarkText, font.FontFamily, (int)font.Style, 32, r, sf);
+
+            graphics.DrawPath(p, gp);
+            graphics.FillPath(sbrush, gp);
+            //graphics.DrawString(watermarkText, font, sbrush, pt);
+            //graphics.Dispose();
 
             return (byte[])converter.ConvertTo(img, typeof(byte[]));
         }
