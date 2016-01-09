@@ -14,6 +14,9 @@ namespace ImageWaterMarker.Controllers
 {
     public class ImageController : ApiController
     {
+        private const int HeightPadding = 100;
+        private const int WidthPadding = 20;
+
         [HttpPost]
         public HttpResponseMessage GetWaterMark(ImageResult image)
         {
@@ -49,29 +52,29 @@ namespace ImageWaterMarker.Controllers
             Color color = Color.FromArgb(100, 0, 0, 0);
 
             //The position where to draw the watermark on the image
-            int x = 20; 
-            int y = img.Height > 100 ? img.Height - 100 : 0;
+            int x = WidthPadding; 
+            int y = img.Height > HeightPadding ? (img.Height - HeightPadding) : 0;
             Point pt = new Point(x, y);
 
             SolidBrush sbrush = new SolidBrush(color);
 
-            Graphics gr = null;
+            Graphics graphics = null;
             try
             {
-                gr = Graphics.FromImage(img);
+                graphics = Graphics.FromImage(img);
             }
             catch
             {
                 // http://support.microsoft.com/Default.aspx?id=814675
-                Image img1 = img;
+                Image tempImage = img;
                 img = new Bitmap(img.Width, img.Height);
-                gr = Graphics.FromImage(img);
-                gr.DrawImage(img1, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel);
-                img1.Dispose();
+                graphics = Graphics.FromImage(img);
+                graphics.DrawImage(tempImage, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel);
+                tempImage.Dispose();
             }
             
-            gr.DrawString(watermarkText, font, sbrush, pt);
-            gr.Dispose();
+            graphics.DrawString(watermarkText, font, sbrush, pt);
+            graphics.Dispose();
 
             return (byte[])converter.ConvertTo(img, typeof(byte[]));
         }
