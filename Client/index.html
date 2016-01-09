@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="piss">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    </head>
+    <body ng-controller="MainCtrl">
+        
+        <div class="container">
+
+            <div class="row well" style="margin-top: 10px;">
+                <div>
+                    
+                    <!-- Controls -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input ng-model="user.email" class="form-control" placeholder="*Username" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input ng-model="user.pass" class="form-control" placeholder="*Password" required>
+                        </div>
+                        <div class="col-md-3">
+                            <select ng-model="user.quality" class="form-control">
+                                <option value="" disabled>Select JPG compression...</option>
+                                <option ng-repeat="option in [0,20,40,60,80,100]" value="{{option}}">{{option}}%</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select ng-model="user.dim" class="form-control">
+                                <option value="" disabled>Select image dimensions...</option>
+                                <option ng-repeat="option in ['640x480','800x600','1024x768','1366x768','1680x1050','1920x1080']"
+                                        value="{{option}}">{{option}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input ng-model="user.port"
+                                   class="form-control"
+                                   type="number"
+                                   placeholder="Port to server"
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-md-2">
+                            <input ng-model="user.newEmail" class="form-control" placeholder="New username" required>
+                            <input ng-model="user.newPass"
+                                   class="form-control"
+                                   style="margin-top: 10px;"
+                                   placeholder="New password"
+                                   required>
+                        </div>
+                        <div class="col-md-2">
+                            <button ng-click="addUser()"
+                                    class="btn btn-block btn-info"
+                                    type="button">
+                                Add user
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button ng-click="delUser()"
+                                    class="btn btn-block btn-danger"
+                                    type="button">
+                                Delete user
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-md-12 text-center">
+                            <div class="btn-group" role="group">
+                                <button ng-click="doScreen()"
+                                        class="btn btn-success"
+                                        type="button">
+                                    Get screenshot
+                                </button>
+                                <button ng-click="clear()"
+                                        class="btn btn-default"
+                                        type="button">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Screenshot -->
+            <div class="row">
+                <div class="col-md-12">
+                    <img ng-show="data.img"
+                         data-ng-src="data:image/jpeg;base64,{{data.img}}"
+                         alt="Broken screenshot"
+                         class="center-block img-responsive">
+                    <div ng-show="!data.img">
+                        <p class="text-center text-muted h1" style="margin-top: 10%;">NO</p>
+                        <p class="text-center text-muted h1">CURRENT</p>
+                        <p class="text-center text-muted h1">SCREENSHOT</p>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        
+        <script src="js/angular.min.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

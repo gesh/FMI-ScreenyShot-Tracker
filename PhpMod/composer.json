@@ -1,0 +1,22 @@
+{
+    "name": "x0r/piss",
+    "description": "Piss project",
+    "require": {
+        "doctrine/orm": "^2.5",
+        "leeoniya/dump-r": "^2.1",
+        "imagine/imagine": "^0.6.3"
+    },
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Mihail Ivanov",
+            "email": "mihail.ivanov93@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Piss\\": "Piss/",
+            "Piss\\Entities\\": "Piss/Entities/"
+        }
+    }
+}
